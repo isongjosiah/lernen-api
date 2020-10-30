@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/isongjosiah/lernen-api/config"
+	"github.com/isongjosiah/lernen-api/deps"
 	"github.com/isongjosiah/lernen-api/tracing"
 	"github.com/pkg/errors"
 	"io"
@@ -16,6 +18,8 @@ import (
 
 type API struct {
 	Server *http.Server
+	Config *config.Config
+	Deps   *deps.Dependencies
 }
 
 func (a *API) Serve() error {
