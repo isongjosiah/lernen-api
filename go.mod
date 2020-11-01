@@ -3,6 +3,7 @@ module github.com/isongjosiah/lernen-api
 go 1.15
 
 require (
+	github.com/badoux/checkmail v1.2.1
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
@@ -12,6 +13,7 @@ require (
 	github.com/lucsky/cuid v1.0.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/net v0.0.0-20201029055024-942e2f445f3c // indirect
 	gopkg.in/caarlos0/env.v2 v2.0.0-20161013201842-d0de832ed2fb
 )

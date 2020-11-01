@@ -19,21 +19,19 @@ func SetContentType(next http.Handler) http.Handler {
 
 func AuthJwtVerify(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		res := map[string]interface{}{"status": "failed", "message": "Missing authorization token"}
+		res := &ServerResponse{}
 		header := r.Header.Get("Authorization")
 		header = strings.TrimSpace(header)
 
 		if header == "" {
-			JSONResponse(w, http.StatusForbidden, res)
+			WriteErrorResponse(w, http.StatusForbidden, "Authorization failed")
 			return
 		}
 
 		token, err := jwt.Parse(header, func(token *jwt.Token) (interface{}, error) { return []byte(os.Getenv("SECRET")), nil })
 
 		if err != nil {
-			res["status"] = "failed"
-			res["message"] = "invalid token, please login"
-			JSONResponse(w, http.StatusForbidden, res)
+			WriteJSONPayload(w, res)
 			return
 		}
 

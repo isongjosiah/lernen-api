@@ -1,10 +1,11 @@
 package model
 
 type User struct {
-	Firstname string
-	Lastname  string
-	Username  string
-	Password  string
+	Firstname string `gorm:"type:char" json:"firstname"`
+	Lastname  string `gorm:"type:car" json:"lastname"`
+	Username  string `gorm:"type:char" json:"username"`
+	Email     string `json:"email"`
+	Password  string `gorm:"type:char" json:"password"`
 	Student   bool
-	Enrolled  []string `gorm:"type:[]text"` // This contains the tile of the courses that user is enrolled in
+	Enrolled  []string `gorm:"type:[]text"`
 }

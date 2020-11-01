@@ -3,6 +3,7 @@ package dal
 import (
 	"github.com/isongjosiah/lernen-api/dal/model"
 	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 )
 
 type IUserDAL interface {
@@ -28,11 +29,26 @@ func NewUserDAL(db *gorm.DB) *UserDAL {
 
 // Add creates a new User
 func (u *UserDAL) Add(user *model.User) error {
+	//check if user already exists in database.
+	account, _ := checkuser(u.Database, user.Email)
+	if account != nil {
+		return errors.New("User is already registered, please login")
+	}
+
+	// Add the user here
 	err := u.Database.Debug().Create(user).Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func checkuser(db *gorm.DB, email string) (*model.User, error) {
+	user := &model.User{}
+	if err := db.Debug().Table("users").Where("email = ?", email).First(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // Delete removes a user
