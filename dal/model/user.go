@@ -5,5 +5,6 @@ type User struct {
 	Lastname  string
 	Username  string
 	Password  string
-	Enrolled  *[]Course
+	Student   bool
+	Enrolled  []string `gorm:"type:[]text"` // This contains the tile of the courses that user is enrolled in
 }

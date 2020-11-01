@@ -17,9 +17,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/config/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/middleware.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/common.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dal/courses.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/response.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/backends.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/backends.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/model/courses.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/courses.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,8 +66,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/dal" />
     </key>
   </component>
@@ -94,7 +103,8 @@
     <MESSAGE value="Initial configuration. Setup Server. Implement Handlers. Define user model" />
     <MESSAGE value="Refactor main" />
     <MESSAGE value="Setup Postgres. Refactor code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Setup Postgres. Refactor code." />
+    <MESSAGE value="Refactor config code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor config code" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -124,14 +134,14 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="898" y="188" width="1022" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1604034015983" />
-    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1604035423488">
+    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1604039796426">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1604035423488" />
-    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1603959935776">
+    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1604039796426" />
+    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1604176337353">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1603959935776" />
+    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1604176337353" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
