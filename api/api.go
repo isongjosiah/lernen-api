@@ -24,13 +24,13 @@ type API struct {
 
 func (a *API) Serve() error {
 	a.Server = &http.Server{
-		Addr:           ":8080", //TODO Josiah fix this with environment variables
+		Addr:           fmt.Sprintf(":%d", a.Config.Port),
 		ReadTimeout:    5 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		Handler:        a.SetupServerHandler(), // instead of using the default http.Handler, we define our own handler here that does a couple of middleware checks
 		MaxHeaderBytes: 1024 * 1024,
 	}
-	fmt.Println("API: runing...")
+	fmt.Printf("API: running. Connect at port: %v...", a.Config.Port)
 
 	return a.Server.ListenAndServe()
 }
