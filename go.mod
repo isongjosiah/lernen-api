@@ -3,7 +3,6 @@ module github.com/isongjosiah/lernen-api
 go 1.15
 
 require (
-	github.com/badoux/checkmail v1.2.1
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible

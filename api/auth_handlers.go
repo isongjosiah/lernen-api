@@ -3,6 +3,8 @@ package api
 import (
 	"fmt"
 	"github.com/go-chi/chi"
+	"github.com/isongjosiah/lernen-api/dal/model"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -16,9 +18,40 @@ func (a *API) AuthRoutes(router *chi.Mux) http.Handler {
 
 //Register is the handler for the path /register
 func (a *API) Register(w http.ResponseWriter, r *http.Request) {
+	var user model.User
+	//read the information from the body. TODO(josiah): check if you need to define middlewares to set the content-type to "application/json"
+	err := decodeJSONBody(nil, r.Body, &user)
+	if err != nil {
+		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// check for empty fields
+	if user.Firstname == "" || user.Lastname == "" || user.Email == "" || user.Username == "" || user.Password == "" {
+		WriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")
+		return
+	}
+	//hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 5)
+	fmt.Println("DEBUG1")
+	if err != nil {
+		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.Password = string(hash)
+	fmt.Println("DEBUG2")
+	fmt.Printf("%T", &user)
+	// add the user to the database
+	status, err := a.Deps.DAL.UserDAL.Add(&user)
+	if err != nil {
+		WriteErrorResponse(w, status, err.Error())
+		return
+	}
+
 	WriteJSONPayload(w, &ServerResponse{
-		Message:    "welcome to register page",
-		StatusCode: http.StatusOK,
+		Message:    "User successfully registered",
+		StatusCode: status,
+		Payload:    user,
 	})
 }
 

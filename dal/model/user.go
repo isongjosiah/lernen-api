@@ -7,5 +7,5 @@ type User struct {
 	Email     string `json:"email"`
 	Password  string `gorm:"type:char" json:"password"`
 	Student   bool
-	Enrolled  []string `gorm:"type:[]text"`
+	//Enrolled  []string `gorm:"type:[]text"` TODO(josiah): sql doesn't allow a slice of strings. figure out a way around that
 }

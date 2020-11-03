@@ -62,14 +62,12 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 func decodeJSONBody(ctx *tracing.Context, body io.ReadCloser, target interface{}) error {
 	//	check if something was delivered in the request body
-	if body == nil {
-		err := fmt.Errorf("request body is empty: %v", ctx)
-		return err
-
-	}
-	if err := json.NewDecoder(body).Decode(&target); err != nil {
-		//TODO: josiah refactor this code after you import the necessary packages
-		return errors.Wrapf(err, "Error parsing json body for request: %v", ctx)
+	err := json.NewDecoder(body).Decode(&target)
+	switch {
+	case err == io.EOF:
+		return errors.New("request body is empty")
+	case err != nil:
+		return errors.Wrap(err, "error parsing json body for request")
 	}
 
 	return nil

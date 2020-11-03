@@ -1,13 +1,16 @@
 package dal
 
 import (
+	"fmt"
 	"github.com/isongjosiah/lernen-api/dal/model"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/pkg/errors"
+	"net/http"
 )
 
 type IUserDAL interface {
-	Add(user *model.User) error
+	Add(user *model.User) (int, error)
 	Delete(username string) error
 	FindUserByUsername(username string) (*model.User, error)
 	FindUserByEmail(email string) (*model.User, error)
@@ -20,32 +23,44 @@ type UserDAL struct {
 	Database *gorm.DB
 }
 
+// SetUp configures the DAL object
+func (u *UserDAL) SetUp(db *gorm.DB) {
+	u.Database = db
+}
+
 // NewUserDAL creates an instance of a user DAL
-func NewUserDAL(db *gorm.DB) *UserDAL {
-	return &UserDAL{
-		Database: db,
-	}
+func NewUserDAL() *UserDAL {
+	return &UserDAL{}
 }
 
 // Add creates a new User
-func (u *UserDAL) Add(user *model.User) error {
+func (u *UserDAL) Add(user *model.User) (int, error) {
+	fmt.Println("DEBUG 4")
+	db := u.Database
+	fmt.Println("DEBUG 3")
 	//check if user already exists in database.
-	account, _ := checkuser(u.Database, user.Email)
+	//TODO(josiah): check out what gorm.DB.NewRecord does.
+
+	// check if email already exists in database
+	account, _ := checkuser(u.Database, user.Email, user.Username)
 	if account != nil {
-		return errors.New("User is already registered, please login")
+		err := errors.New("User is already registered, please login")
+		return http.StatusBadRequest, err
 	}
 
 	// Add the user here
-	err := u.Database.Debug().Create(user).Error
+	err := db.Debug().Create(user).Error
 	if err != nil {
-		return err
+		err := errors.Wrap(err, "There was an error in adding user to the database")
+		err = errors.New(err.Error())
+		return http.StatusInternalServerError, err
 	}
-	return nil
+	return http.StatusOK, nil
 }
 
-func checkuser(db *gorm.DB, email string) (*model.User, error) {
+func checkuser(db *gorm.DB, email string, username string) (*model.User, error) {
 	user := &model.User{}
-	if err := db.Debug().Table("users").Where("email = ?", email).First(user).Error; err != nil {
+	if err := db.Debug().Table("users").Where("email = ? OR username =?", email, username).First(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil

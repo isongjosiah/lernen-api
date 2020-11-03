@@ -85,7 +85,7 @@ func respondWithError(err error, httpStatusCode int, tracingContext *tracing.Con
 		}).Error(message)
 
 	return &ServerResponse{
-		Err:        fmt.Errorf("%v, request-id: %v", message, tracingContext.RequestID),
+		Err:        errors.New(message), //TODO(josiah): add context-information here
 		StatusCode: httpStatusCode,
 		Message:    message,
 	}
