@@ -4,7 +4,7 @@
 1. Have `go` installed on your machine
 2. clone the repo.
 
-You can use `postman` to query the api at port 8080 i.e `localhost:8080`. Should you 
+You can use `postman` to query the api at port `8080` i.e `localhost:8080`. Should you 
 need to adjust the port you can do so in the .env file at the root of the api project.
 
 To test the sign-up implementation use `localhost:8080/auth/register`, you should also provide the input in json format like so defining your own values. 
