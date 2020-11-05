@@ -3,13 +3,9 @@ package api
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
-
-	jwt "github.com/dgrijalva/jwt-go"
 )
 
-//TODO(josiah): restructure the middleware properly. i.e carry out the token authentication elegantly
 func SetContentType(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -17,30 +13,26 @@ func SetContentType(next http.Handler) http.Handler {
 	})
 }
 
-func AuthJwtVerify(next http.Handler) http.Handler {
+// AuthenticateJWT validates that the jwt token sent along with a user requests was signed by the API
+func AuthenticateJWT(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		res := &ServerResponse{}
-		header := r.Header.Get("Authorization")
-		header = strings.TrimSpace(header)
+		authorization := r.Header.Get("Authorization")
+		authorization = strings.TrimSpace(authorization)
 
-		if header == "" {
-			WriteErrorResponse(w, http.StatusForbidden, "Authorization failed")
+		if authorization == "" {
+			WriteErrorResponse(w, http.StatusForbidden, "You are unable to access this page")
 			return
 		}
 
-		token, err := jwt.Parse(header, func(token *jwt.Token) (interface{}, error) { return []byte(os.Getenv("SECRET")), nil })
+		email, err := VerifyToken("", authorization)
 
 		if err != nil {
-			WriteJSONPayload(w, res)
+			WriteErrorResponse(w, http.StatusForbidden, "You do not have the authorization to view this page, Please sign in again.")
 			return
 		}
 
-		claims, _ := token.Claims.(jwt.MapClaims)
-
-		ctx := context.WithValue(r.Context(), "userID", claims["userID"])
-
+		ctx := context.WithValue(r.Context(), "email", email)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
-
 	return http.HandlerFunc(fn)
 }

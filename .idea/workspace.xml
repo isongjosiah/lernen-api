@@ -17,10 +17,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/api/token.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/model/courses.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/courses.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +42,11 @@
   </component>
   <component name="GOROOT" path="/usr/local/go" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GoLibraries">
@@ -79,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604412872855</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Refactor Code.">
+      <created>1604414063420</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1604414063420</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -96,7 +113,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="Implement-user-authentication" />
                       </list>
                     </value>
                   </entry>
@@ -117,7 +134,9 @@
     <MESSAGE value="Refactor code. Switch to gorm for database interactions." />
     <MESSAGE value="Refactor response.go." />
     <MESSAGE value="Implement Email Sign-up." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement Email Sign-up." />
+    <MESSAGE value="Refactor Code." />
+    <MESSAGE value="Add create and verify token functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add create and verify token functions." />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -151,10 +170,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="125" y="153" width="1022" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1604406482251" />
-    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1604412890785">
+    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1604414069183">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1604412890785" />
+    <state x="1035" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1604414069183" />
     <state x="1058" y="203" width="754" height="707" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604240356977">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -163,10 +182,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="600" height="428" key="javadoc.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1604240308046" />
-    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1604411937241">
+    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1604565089842">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1604411937241" />
+    <state x="1103" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1604565089842" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
