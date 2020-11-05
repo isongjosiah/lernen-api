@@ -6,6 +6,10 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
       </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
     </expand>
     <select>
       <path>
@@ -17,7 +21,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/middleware.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +133,8 @@
     <MESSAGE value="Implement Email Sign-up." />
     <MESSAGE value="Refactor Code." />
     <MESSAGE value="Add create and verify token functions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add create and verify token functions." />
+    <MESSAGE value="Deploy to Heroku" />
+    <option name="LAST_COMMIT_MESSAGE" value="Deploy to Heroku" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
