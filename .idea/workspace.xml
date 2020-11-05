@@ -11,19 +11,14 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:Implement-user-authentication" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/api/token.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dal/model/courses.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/courses.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dal/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/user_handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user_handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
