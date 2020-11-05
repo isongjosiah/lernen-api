@@ -1,6 +1,9 @@
 package model
 
+import "github.com/jinzhu/gorm"
+
 type User struct {
+	gorm.Model
 	Firstname string `gorm:"type:char" json:"firstname"`
 	Lastname  string `gorm:"type:car" json:"lastname"`
 	Username  string `gorm:"type:char" json:"username"`

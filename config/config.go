@@ -16,7 +16,8 @@ type Config struct {
 	ServiceName string
 	PostgresUrl string `env:"POSTGRES_URL" required:"true"`
 	Development bool   `env:"DEVELOPMENT" envDefault:"true"`
-	Port        int    `env:"PORT" required:"true""`
+	Port        int    `env:"PORT" required:"true"`
+	TokenSecret string `env:"TOKEN_SECRET" required:"true"`
 }
 
 //New returns a pointer to config
