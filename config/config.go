@@ -2,7 +2,9 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"github.com/joho/godotenv"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/caarlos0/env.v2"
@@ -28,10 +30,14 @@ func New() (*Config, error) {
 	if err := env.Parse(&cfg); err != nil {
 		return nil, errors.New("No environment variable provided.")
 	}
-
+	cfg.PostgresUrl = os.Getenv("POSTGRES_URL")
+	fmt.Println("here")
+	fmt.Println(cfg.PostgresUrl)
 	cfg.ServiceName = AppSrvName
 
+
 	if cfg.Development {
+		fmt.Println("got here!")
 		//load a .env file
 		err := godotenv.Load("./.env")
 		if err != nil {
@@ -44,5 +50,6 @@ func New() (*Config, error) {
 			log.Fatal(err.Error())
 		}
 	}
+
 	return &cfg, nil
 }

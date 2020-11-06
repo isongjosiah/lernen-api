@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"os"
 )
 
 //DAL is and object housing the entire data access layer
@@ -16,7 +17,7 @@ type DAL struct {
 
 //TODO(josiah): definitely refactor this code.
 func (d *DAL) setupDALObjects(cfg *config.Config) error {
-
+	log.Infof("JwT secret is %s", os.Getenv("TOKEN_SECRET"))
 	log.Info("Database : connecting to client ...")
 	db, err := gorm.Open("postgres", cfg.PostgresUrl)
 	if err != nil {
