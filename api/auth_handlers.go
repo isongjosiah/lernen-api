@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/isongjosiah/lernen-api/dal/model"
@@ -22,20 +23,20 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 	//read the information from the body. TODO(josiah): check if you need to define middlewares to set the content-type to "application/json"
 	err := decodeJSONBody(nil, r.Body, &user)
 	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	// check for empty fields
 	if user.Firstname == "" || user.Lastname == "" || user.Email == "" || user.Username == "" || user.Password == "" {
-		WriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
 		return
 	}
 	//hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 5)
 	fmt.Println("DEBUG1")
 	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 	user.Password = string(hash)
@@ -44,7 +45,7 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 	// add the user to the database
 	status, err := a.Deps.DAL.UserDAL.Add(&user)
 	if err != nil {
-		WriteErrorResponse(w, status, err.Error())
+		WriteErrorResponse(w, status, err)
 		return
 	}
 

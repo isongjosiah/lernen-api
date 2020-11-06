@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"errors"
+	"github.com/isongjosiah/lernen-api/common"
 	"net/http"
 	"os"
 	"strings"
@@ -21,18 +23,18 @@ func AuthenticateJWT(next http.Handler) http.Handler {
 		authorization = strings.TrimSpace(authorization)
 
 		if authorization == "" {
-			WriteErrorResponse(w, http.StatusForbidden, "You are unable to access this page")
+			WriteErrorResponse(w, http.StatusForbidden, errors.New("You are unable to access this page"))
 			return
 		}
 		jwtSecret := os.Getenv("TOKEN_SECRET") // see if there is a better way to do this josiah
 		email, err := VerifyToken(jwtSecret, authorization)
 
 		if err != nil {
-			WriteErrorResponse(w, http.StatusForbidden, "You do not have the authorization to view this page, Please sign in again.")
+			WriteErrorResponse(w, http.StatusForbidden, errors.New("You do not have the authorization to view this page, Please sign in again."))
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "email", email)
+		ctx := context.WithValue(r.Context(), common.ContextKey("email"), email)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 	return http.HandlerFunc(fn)

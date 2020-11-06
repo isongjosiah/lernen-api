@@ -1,7 +1,7 @@
 package dal
 
 import (
-	"fmt"
+	"github.com/badoux/checkmail"
 	"github.com/isongjosiah/lernen-api/dal/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -35,11 +35,14 @@ func NewUserDAL() *UserDAL {
 
 // Add creates a new User
 func (u *UserDAL) Add(user *model.User) (int, error) {
-	fmt.Println("DEBUG 4")
 	db := u.Database
-	fmt.Println("DEBUG 3")
 	//check if user already exists in database.
 	//TODO(josiah): check out what gorm.DB.NewRecord does.
+
+	// check if the email provided is valid
+	if err := checkmail.ValidateFormat(user.Email); err != nil {
+		return http.StatusBadRequest, err
+	}
 
 	// check if email already exists in database
 	account, _ := checkuser(u.Database, user.Email, user.Username)
