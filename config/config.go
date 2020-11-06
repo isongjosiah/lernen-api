@@ -15,7 +15,7 @@ const (
 //Config contains the necessary configuration for the file
 type Config struct {
 	ServiceName string
-	PostgresUrl string `env:"POSTGRES_URL" required:"true"`
+	PostgresUrl string `env:"DATABASE_URL" required:"true"`
 	Development bool   `env:"DEVELOPMENT" envDefault:"false"`
 	Port        int    `env:"PORT" required:"true"`
 	TokenSecret string `env:"TOKEN_SECRET" required:"true"`
