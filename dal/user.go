@@ -41,7 +41,7 @@ func (u *UserDAL) Add(user *model.User) (int, error) {
 
 	// check if the email provided is valid
 	if err := checkmail.ValidateFormat(user.Email); err != nil {
-		return http.StatusBadRequest, err
+		return http.StatusBadRequest, errors.New("invalid email format. Please use \"username@example.com\" as format.")
 	}
 
 	// check if email already exists in database
