@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -23,8 +24,8 @@ func AuthenticateJWT(next http.Handler) http.Handler {
 			WriteErrorResponse(w, http.StatusForbidden, "You are unable to access this page")
 			return
 		}
-
-		email, err := VerifyToken("", authorization)
+		jwtSecret := os.Getenv("TOKEN_SECRET") // see if there is a better way to do this josiah
+		email, err := VerifyToken(jwtSecret, authorization)
 
 		if err != nil {
 			WriteErrorResponse(w, http.StatusForbidden, "You do not have the authorization to view this page, Please sign in again.")
