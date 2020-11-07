@@ -1,0 +1,211 @@
+warning: LF will be replaced by CRLF in go.sum.
+The file will have its original line endings in your working directory
+[1mdiff --git a/api/api.go b/api/api.go[m
+[1mindex 87c462d..6960473 100644[m
+[1m--- a/api/api.go[m
+[1m+++ b/api/api.go[m
+[36m@@ -4,13 +4,14 @@[m [mimport ([m
+ 	"context"[m
+ 	"encoding/json"[m
+ 	"fmt"[m
+[32m+[m	[32m"io"[m
+[32m+[m	[32m"net/http"[m
+[32m+[m	[32m"time"[m
+[32m+[m
+ 	"github.com/isongjosiah/lernen-api/config"[m
+ 	"github.com/isongjosiah/lernen-api/deps"[m
+ 	"github.com/isongjosiah/lernen-api/tracing"[m
+ 	"github.com/pkg/errors"[m
+[31m-	"io"[m
+[31m-	"net/http"[m
+[31m-	"time"[m
+ [m
+ 	"github.com/go-chi/chi"[m
+ 	"github.com/go-chi/chi/middleware"[m
+[1mdiff --git a/api/auth_handlers.go b/api/auth_handlers.go[m
+[1mindex 0d5fe7a..75cbe1a 100644[m
+[1m--- a/api/auth_handlers.go[m
+[1m+++ b/api/auth_handlers.go[m
+[36m@@ -2,10 +2,12 @@[m [mpackage api[m
+ [m
+ import ([m
+ 	"fmt"[m
+[32m+[m	[32m"log"[m
+[32m+[m	[32m"net/http"[m
+[32m+[m
+ 	"github.com/go-chi/chi"[m
+ 	"github.com/isongjosiah/lernen-api/dal/model"[m
+ 	"golang.org/x/crypto/bcrypt"[m
+[31m-	"net/http"[m
+ )[m
+ [m
+ //AuthRoutes sets up the authentication handlers[m
+[36m@@ -31,14 +33,12 @@[m [mfunc (a *API) Register(w http.ResponseWriter, r *http.Request) {[m
+ 		WriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")[m
+ 		return[m
+ 	}[m
+[31m-	//hash the password[m
+[31m-	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 5)[m
+ 	fmt.Println("DEBUG1")[m
+ 	if err != nil {[m
+ 		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())[m
+ 		return[m
+ 	}[m
+[31m-	user.Password = string(hash)[m
+[32m+[m	[32muser.Password = hashPassword(user.Password, w)[m
+ 	fmt.Println("DEBUG2")[m
+ 	fmt.Printf("%T", &user)[m
+ 	// add the user to the database[m
+[36m@@ -55,9 +55,87 @@[m [mfunc (a *API) Register(w http.ResponseWriter, r *http.Request) {[m
+ 	})[m
+ }[m
+ [m
+[32m+[m[32mtype LoginDetails struct {[m
+[32m+[m	[32mEmail    string[m
+[32m+[m	[32mPassword string[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mtype UserDetails struct {[m
+[32m+[m	[32mUser  *model.User[m
+[32m+[m	[32mToken string[m
+[32m+[m[32m}[m
+[32m+[m
+ //Login is the handler for the path /login[m
+ func (a *API) Login(w http.ResponseWriter, r *http.Request) {[m
+[31m-	if _, err := fmt.Fprintf(w, "Hello you have requested: %s\n", r.URL.Path); err != nil {[m
+[32m+[m	[32mvar user *model.User[m
+[32m+[m	[32mvar loginDetails LoginDetails[m
+[32m+[m	[32mvar userDetails UserDetails[m
+[32m+[m
+[32m+[m	[32merr := decodeJSONBody(nil, r.Body, &loginDetails)[m
+[32m+[m
+[32m+[m	[32mif err != nil {[m
+[32m+[m		[32mWriteErrorResponse(w, http.StatusInternalServerError, err.Error())[m
+ 		return[m
+ 	}[m
+[32m+[m
+[32m+[m	[32mif len(loginDetails.Email) == 0 || len(loginDetails.Password) == 0 {[m
+[32m+[m		[32mWriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")[m
+[32m+[m		[32mreturn[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m//Find user by email[m
+[32m+[m	[32muser, findUserErr := a.Deps.DAL.UserDAL.FindUserByEmail(loginDetails.Email)[m
+[32m+[m	[32mfmt.Println("Retrieving user details")[m
+[32m+[m
+[32m+[m	[32mif findUserErr == nil {[m
+[32m+[m		[32mif !comparePasswords(user.Password, []byte(loginDetails.Password)) {[m
+[32m+[m			[32mWriteErrorResponse(w, http.StatusBadRequest, "User details do not match.")[m
+[32m+[m			[32mreturn[m
+[32m+[m		[32m}[m
+[32m+[m
+[32m+[m		[32mvar jwtSecretKey = []byte("jwt_secret_key")[m
+[32m+[m		[32mtokenString, tokenErr := GenerateToken(jwtSecretKey, loginDetails.Email)[m
+[32m+[m
+[32m+[m		[32mif tokenErr == nil {[m
+[32m+[m			[32muserDetails.Token = tokenString[m
+[32m+[m			[32muserDetails.User = user[m
+[32m+[m			[32mWriteJSONPayload(w, &ServerResponse{[m
+[32m+[m				[32mMessage:    "Login successful",[m
+[32m+[m				[32mStatusCode: 200,[m
+[32m+[m				[32mPayload:    userDetails,[m
+[32m+[m			[32m})[m
+[32m+[m			[32mreturn[m
+[32m+[m		[32m}[m
+[32m+[m		[32mWriteJSONPayload(w, &ServerResponse{[m
+[32m+[m			[32mMessage:    "Error while validating user",[m
+[32m+[m			[32mStatusCode: http.StatusInternalServerError,[m
+[32m+[m			[32mPayload:    userDetails,[m
+[32m+[m		[32m})[m
+[32m+[m		[32mreturn[m
+[32m+[m	[32m}[m
+[32m+[m	[32mWriteErrorResponse(w, http.StatusBadRequest, "User not found.")[m
+[32m+[m	[32mreturn[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunc hashPassword(password string, w http.ResponseWriter) string {[m
+[32m+[m	[32m//hash the password[m
+[32m+[m	[32mhash, err := bcrypt.GenerateFromPassword([]byte(password), 5)[m
+[32m+[m	[32mfmt.Println("DEBUG1")[m
+[32m+[m	[32mif err != nil {[m
+[32m+[m		[32mWriteErrorResponse(w, http.StatusInternalServerError, err.Error())[m
+[32m+[m		[32mreturn "Error while hashing password"[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mreturn string(hash)[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunc comparePasswords(hashedPwd string, plainPwd []byte) bool {[m
+[32m+[m	[32mbyteHash := []byte(hashedPwd)[m
+[32m+[m	[32merr := bcrypt.CompareHashAndPassword(byteHash, plainPwd)[m
+[32m+[m	[32mif err != nil {[m
+[32m+[m		[32mlog.Println(err)[m
+[32m+[m		[32mreturn false[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mreturn true[m
+ }[m
+[1mdiff --git a/api/token.go b/api/token.go[m
+[1mindex fbb3a84..5185ba6 100644[m
+[1m--- a/api/token.go[m
+[1m+++ b/api/token.go[m
+[36m@@ -1,8 +1,9 @@[m
+ package api[m
+ [m
+ import ([m
+[31m-	"github.com/dgrijalva/jwt-go"[m
+ 	"time"[m
+[32m+[m
+[32m+[m	[32m"github.com/dgrijalva/jwt-go"[m
+ )[m
+ [m
+ type Claim struct {[m
+[36m@@ -12,7 +13,7 @@[m [mtype Claim struct {[m
+ }[m
+ [m
+ // GenerateToken generates the token[m
+[31m-func GenerateToken(jwtSecretKey string, email string) (string, error) {[m
+[32m+[m[32mfunc GenerateToken(jwtSecretKey []byte, email string) (string, error) {[m
+ 	IssuedAt := time.Now()[m
+ 	ExpiresAt := time.Now().Add(time.Hour * 24)[m
+ 	claims := &Claim{[m
+[1mdiff --git a/dal/user.go b/dal/user.go[m
+[1mindex d5abab3..f7811fb 100644[m
+[1m--- a/dal/user.go[m
+[1m+++ b/dal/user.go[m
+[36m@@ -2,11 +2,12 @@[m [mpackage dal[m
+ [m
+ import ([m
+ 	"fmt"[m
+[32m+[m	[32m"net/http"[m
+[32m+[m
+ 	"github.com/isongjosiah/lernen-api/dal/model"[m
+ 	"github.com/jinzhu/gorm"[m
+ 	_ "github.com/jinzhu/gorm/dialects/postgres"[m
+ 	"github.com/pkg/errors"[m
+[31m-	"net/http"[m
+ )[m
+ [m
+ type IUserDAL interface {[m
+[36m@@ -78,7 +79,8 @@[m [mfunc (u *UserDAL) FindUserByUsername(username string) (*model.User, error) {[m
+ [m
+ // FindUserByEmail returns a user based on a provided email address[m
+ func (u *UserDAL) FindUserByEmail(email string) (*model.User, error) {[m
+[31m-	return nil, nil[m
+[32m+[m	[32mdb := u.Database[m
+[32m+[m	[32mreturn checkuser(db, email, "")[m
+ }[m
+ [m
+ // GetCourses returns a list of the title of the courses the user is enrolled in[m
+[1mdiff --git a/go.sum b/go.sum[m
+[1mindex 2a0e967..d7da8c9 100644[m
+[1m--- a/go.sum[m
+[1m+++ b/go.sum[m
+[36m@@ -64,6 +64,7 @@[m [mgolang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c/go.mod h1:djNgcEr1/C05ACk[m
+ golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=[m
+ golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 h1:psW17arqaxU48Z5kZ0CQnkZWQJsqcURM6tKiBApRjXI=[m
+ golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=[m
+[32m+[m[32mgolang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 h1:pLI5jrR7OSLijeIDcmRxNmw2api+jEfxLoykJVice/E=[m
+ golang.org/x/net v0.0.0-20180218175443-cbe0f9307d01/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=[m
+ golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=[m
+ golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=[m

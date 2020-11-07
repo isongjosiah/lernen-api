@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"time"
+
 	"github.com/isongjosiah/lernen-api/config"
 	"github.com/isongjosiah/lernen-api/deps"
 	"github.com/isongjosiah/lernen-api/tracing"
 	"github.com/pkg/errors"
-	"io"
-	"net/http"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"

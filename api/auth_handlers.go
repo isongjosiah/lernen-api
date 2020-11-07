@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/go-chi/chi"
 	"github.com/isongjosiah/lernen-api/dal/model"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
 //AuthRoutes sets up the authentication handlers
@@ -31,14 +33,12 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")
 		return
 	}
-	//hash the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 5)
 	fmt.Println("DEBUG1")
 	if err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	user.Password = string(hash)
+	user.Password = hashPassword(user.Password, w)
 	fmt.Println("DEBUG2")
 	fmt.Printf("%T", &user)
 	// add the user to the database
@@ -55,9 +55,87 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+type LoginDetails struct {
+	Email    string
+	Password string
+}
+
+type UserDetails struct {
+	User  *model.User
+	Token string
+}
+
 //Login is the handler for the path /login
 func (a *API) Login(w http.ResponseWriter, r *http.Request) {
-	if _, err := fmt.Fprintf(w, "Hello you have requested: %s\n", r.URL.Path); err != nil {
+	var user *model.User
+	var loginDetails LoginDetails
+	var userDetails UserDetails
+
+	err := decodeJSONBody(nil, r.Body, &loginDetails)
+
+	if err != nil {
+		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	if len(loginDetails.Email) == 0 || len(loginDetails.Password) == 0 {
+		WriteErrorResponse(w, http.StatusBadRequest, "some required fields are empty. Please fill all fields")
+		return
+	}
+
+	//Find user by email
+	user, findUserErr := a.Deps.DAL.UserDAL.FindUserByEmail(loginDetails.Email)
+	fmt.Println("Retrieving user details")
+
+	if findUserErr == nil {
+		if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
+			WriteErrorResponse(w, http.StatusBadRequest, "User details do not match.")
+			return
+		}
+
+		var jwtSecretKey = []byte("jwt_secret_key")
+		tokenString, tokenErr := GenerateToken(jwtSecretKey, loginDetails.Email)
+
+		if tokenErr == nil {
+			userDetails.Token = tokenString
+			userDetails.User = user
+			WriteJSONPayload(w, &ServerResponse{
+				Message:    "Login successful",
+				StatusCode: 200,
+				Payload:    userDetails,
+			})
+			return
+		}
+		WriteJSONPayload(w, &ServerResponse{
+			Message:    "Error while validating user",
+			StatusCode: http.StatusInternalServerError,
+			Payload:    userDetails,
+		})
+		return
+	}
+	WriteErrorResponse(w, http.StatusBadRequest, "User not found.")
+	return
+}
+
+func hashPassword(password string, w http.ResponseWriter) string {
+	//hash the password
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 5)
+	fmt.Println("DEBUG1")
+	if err != nil {
+		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return "Error while hashing password"
+	}
+
+	return string(hash)
+}
+
+func comparePasswords(hashedPwd string, plainPwd []byte) bool {
+	byteHash := []byte(hashedPwd)
+	err := bcrypt.CompareHashAndPassword(byteHash, plainPwd)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	return true
 }

@@ -2,11 +2,12 @@ package dal
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/isongjosiah/lernen-api/dal/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/pkg/errors"
-	"net/http"
 )
 
 type IUserDAL interface {
@@ -78,7 +79,8 @@ func (u *UserDAL) FindUserByUsername(username string) (*model.User, error) {
 
 // FindUserByEmail returns a user based on a provided email address
 func (u *UserDAL) FindUserByEmail(email string) (*model.User, error) {
-	return nil, nil
+	db := u.Database
+	return checkuser(db, email, "")
 }
 
 // GetCourses returns a list of the title of the courses the user is enrolled in
