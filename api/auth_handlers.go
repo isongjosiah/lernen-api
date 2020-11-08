@@ -139,7 +139,6 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	WriteErrorResponse(w, http.StatusBadRequest, errors.New("user not found"))
-	return
 }
 
 func hashPassword(password string, w http.ResponseWriter) string {

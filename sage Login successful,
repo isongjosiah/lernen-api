@@ -193,7 +193,7 @@ The file will have its original line endings in your working directory
  func (u *UserDAL) FindUserByEmail(email string) (*model.User, error) {[m
 [31m-	return nil, nil[m
 [32m+[m	[32mdb := u.Database[m
-[32m+[m	[32mreturn checkuser(db, email, "")[m
+[32m+[m	[32mreturn checkUser(db, email, "")[m
  }[m
  [m
  // GetCourses returns a list of the title of the courses the user is enrolled in[m

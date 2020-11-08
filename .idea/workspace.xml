@@ -25,8 +25,8 @@
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/auth_handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth_handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/lernen-api" beforeDir="false" afterPath="$PROJECT_DIR$/bin/lernen-api" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sage Login successful," beforeDir="false" afterPath="$PROJECT_DIR$/sage Login successful," afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
