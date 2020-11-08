@@ -1,8 +1,8 @@
 package config
 
 import (
+	"errors"
 	"github.com/joho/godotenv"
-
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/caarlos0/env.v2"
 )
@@ -14,9 +14,10 @@ const (
 //Config contains the necessary configuration for the file
 type Config struct {
 	ServiceName string
-	PostgresUrl string `env:"POSTGRES_URL" required:"true"`
+	PostgresUrl string `env:"DATABASE_URL" required:"true"`
 	Development bool   `env:"DEVELOPMENT" envDefault:"true"`
-	Port        int    `env:"PORT" required:"true""`
+	Port        int    `env:"PORT" required:"true"`
+	TokenSecret string `env:"TOKEN_SECRET" required:"true"`
 }
 
 //New returns a pointer to config
@@ -24,9 +25,8 @@ func New() (*Config, error) {
 	var cfg Config
 
 	if err := env.Parse(&cfg); err != nil {
-		log.Fatal(err.Error())
+		return nil, errors.New("No environment variable provided.")
 	}
-
 	cfg.ServiceName = AppSrvName
 
 	if cfg.Development {
@@ -42,5 +42,6 @@ func New() (*Config, error) {
 			log.Fatal(err.Error())
 		}
 	}
+
 	return &cfg, nil
 }

@@ -16,11 +16,10 @@ type DAL struct {
 
 //TODO(josiah): definitely refactor this code.
 func (d *DAL) setupDALObjects(cfg *config.Config) error {
-
 	log.Info("Database : connecting to client ...")
 	db, err := gorm.Open("postgres", cfg.PostgresUrl)
 	if err != nil {
-		err := errors.Wrapf(err, "Database: unable to open an initial connection to ElephantSQL client: %v", cfg.PostgresUrl)
+		err := errors.Wrapf(err, "Database: unable to open an initial connection to Postgres client: %v", cfg.PostgresUrl)
 		return err
 	}
 

@@ -27,7 +27,7 @@ func main() {
 	// set up the project dependencies
 	deps, err := deps.New(cfg)
 	if err != nil {
-		log.Fatal("Unable to setup dependencies, Error: %v", err.Error())
+		log.Fatalf("Unable to setup dependencies, Error: %s", err.Error())
 	}
 	log.Info("Deps: ok")
 

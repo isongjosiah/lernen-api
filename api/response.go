@@ -3,10 +3,9 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/isongjosiah/lernen-api/common"
 	"github.com/isongjosiah/lernen-api/tracing"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -18,12 +17,11 @@ const (
 
 // ServerResponse struct ...
 type ServerResponse struct {
-	Err         error
-	Message     string
-	StatusCode  int
-	Context     context.Context
-	ContentType common.ContentType
-	Payload     interface{}
+	Err         string              `json:"error"`
+	Message     string             `json:"message"`
+	StatusCode  int                `json:"status_code"`
+	Context     context.Context    `json:"context"`
+	Payload     interface{}        `json:"payload"`
 }
 
 // ErrorResponse struct ...
@@ -33,17 +31,18 @@ type ErrorResponse struct {
 }
 
 // Error returns the response error as a string
-func (r *ServerResponse) Error() string {
+/*func (r *ServerResponse) Error() string {
 	return r.Err.Error()
-}
+}*/
 
-func WriteErrorResponse(w http.ResponseWriter, statusCode int, errString string) {
-	r := respondWithError(errors.New(errString), statusCode, nil)
+func WriteErrorResponse(w http.ResponseWriter, statusCode int, err error) {
+	println(err)
+	r := respondWithError(err, statusCode, nil)
 	errorResponse, _ := json.Marshal(r)
 	WriteJSONResponse(w, r.StatusCode, errorResponse)
 }
 
-// WriteJSONResponse writes data and statuus code to the ResponseWriter
+// WriteJSONResponse writes data and status code to the ResponseWriter
 func WriteJSONResponse(r http.ResponseWriter, statusCode int, content []byte) {
 	r.Header().Set("Content-Type", "application/json")
 	r.WriteHeader(statusCode)
@@ -66,7 +65,7 @@ func WithContext(tracingContext *tracing.Context) *logrus.Entry {
 func WriteJSONPayload(w http.ResponseWriter, data *ServerResponse) {
 	result, err := json.Marshal(data)
 	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, "Error creating json response")
+		WriteErrorResponse(w, http.StatusInternalServerError, errors.New("Error creating json response"))
 		return
 	}
 	WriteJSONResponse(w, data.StatusCode, result)
@@ -75,7 +74,7 @@ func WriteJSONPayload(w http.ResponseWriter, data *ServerResponse) {
 // respondWithError
 func respondWithError(err error, httpStatusCode int, tracingContext *tracing.Context) *ServerResponse {
 	message := err.Error()
-	if err == nil {
+	if err != nil {
 		err = fmt.Errorf(message)
 	}
 
@@ -85,9 +84,11 @@ func respondWithError(err error, httpStatusCode int, tracingContext *tracing.Con
 		}).Error(message)
 
 	return &ServerResponse{
-		Err:        errors.New(message), //TODO(josiah): add context-information here
-		StatusCode: httpStatusCode,
-		Message:    message,
+		Err:         message,
+		Message:     "failed",
+		StatusCode:  httpStatusCode,
+		Context:     nil,
+		Payload:     nil,
 	}
 
 }
