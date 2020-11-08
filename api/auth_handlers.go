@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -34,14 +33,12 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
 		return
 	}
-	fmt.Println("DEBUG1")
+
 	if err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 	user.Password = hashPassword(user.Password, w)
-	fmt.Println("DEBUG2")
-	fmt.Printf("%T", &user)
 	// add the user to the database
 	status, err := a.Deps.DAL.UserDAL.Add(&user)
 	if err != nil {
@@ -59,8 +56,8 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 //Login is the handler for the path /login
 func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 	var user *model.User
-	var loginDetails *model.LoginDetails
-	var userDetails *model.UserDetails
+	var loginDetails model.LoginDetails
+	var userDetails model.UserDetails
 
 	err := decodeJSONBody(nil, r.Body, &loginDetails)
 
@@ -80,38 +77,40 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 
 	if findUserErr == nil {
 		if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
-			WriteErrorResponse(w, http.StatusBadRequest, errors.New("User details do not match."))
+			WriteErrorResponse(w, http.StatusBadRequest, errors.New("user details do not match"))
 			return
 		}
 
 		jwtSecretKey := []byte(a.Config.TokenSecret)
 		tokenString, tokenErr := GenerateToken(jwtSecretKey, loginDetails.Email)
 
-		if tokenErr == nil {
-			userDetails.Token = tokenString
-			userDetails.User = user
+		if tokenErr != nil {
 			WriteJSONPayload(w, &ServerResponse{
-				Message:    "Login successful",
-				StatusCode: 200,
-				Payload:    userDetails,
+				Err:        "Error while validating user",
+				Message:    "failed",
+				StatusCode: http.StatusInternalServerError,
+				Payload:    loginDetails,
 			})
 			return
 		}
+
+		userDetails.Token = tokenString
+		userDetails.User = user
 		WriteJSONPayload(w, &ServerResponse{
-			Message:    "Error while validating user",
-			StatusCode: http.StatusInternalServerError,
+			Message:    "Login successful",
+			StatusCode: http.StatusOK,
 			Payload:    userDetails,
 		})
 		return
 	}
-	WriteErrorResponse(w, http.StatusBadRequest, errors.New("User not found."))
+
+	WriteErrorResponse(w, http.StatusBadRequest, errors.New("user not found"))
 	return
 }
 
 func hashPassword(password string, w http.ResponseWriter) string {
 	//hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 5)
-	fmt.Println("DEBUG1")
 	if err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return "Error while hashing password"

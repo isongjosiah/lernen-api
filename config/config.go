@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/caarlos0/env.v2"
@@ -16,7 +15,7 @@ const (
 type Config struct {
 	ServiceName string
 	PostgresUrl string `env:"DATABASE_URL" required:"true"`
-	Development bool   `env:"DEVELOPMENT" envDefault:"false"`
+	Development bool   `env:"DEVELOPMENT" envDefault:"true"`
 	Port        int    `env:"PORT" required:"true"`
 	TokenSecret string `env:"TOKEN_SECRET" required:"true"`
 }
@@ -30,9 +29,7 @@ func New() (*Config, error) {
 	}
 	cfg.ServiceName = AppSrvName
 
-
 	if cfg.Development {
-		fmt.Println("got here!")
 		//load a .env file
 		err := godotenv.Load("./.env")
 		if err != nil {

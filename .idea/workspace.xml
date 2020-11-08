@@ -23,14 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sage Login successful," afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/auth_handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth_handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/token.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dal/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/lernen-api" beforeDir="false" afterPath="$PROJECT_DIR$/bin/lernen-api" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,6 +165,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="1155" y="355" width="559" height="410" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1604033982388" />
+    <state x="100" y="127" width="1720" height="853" key="DiffContextDialog" timestamp="1604799179057">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="100" y="127" width="1720" height="853" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1604799179057" />
     <state x="1223" y="311" width="424" height="491" key="FileChooserDialogImpl" timestamp="1604226879744">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -207,7 +207,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/config/config.go</url>
-          <line>8</line>
+          <line>7</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
