@@ -12,3 +12,13 @@ type User struct {
 	Student   bool   `json:"student"`
 	//Enrolled  []string `gorm:"type:[]text"` TODO(josiah): sql doesn't allow a slice of strings. figure out a way around that
 }
+
+type LoginDetails struct {
+	Email    string
+	Password string
+}
+
+type UserDetails struct {
+	User  *User
+	Token string
+}

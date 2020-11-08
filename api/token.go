@@ -1,8 +1,9 @@
 package api
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type Claim struct {
@@ -12,7 +13,7 @@ type Claim struct {
 }
 
 // GenerateToken generates the token
-func GenerateToken(jwtSecretKey string, email string) (string, error) {
+func GenerateToken(jwtSecretKey []byte, email string) (string, error) {
 	IssuedAt := time.Now()
 	ExpiresAt := time.Now().Add(time.Hour * 24)
 	claims := &Claim{

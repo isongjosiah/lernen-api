@@ -1,5 +1,8 @@
 # Lernen-api
 
+[![DeepSource](https://deepsource.io/gh/isongjosiah/lernen-api.svg/?label=active+issues&show_trend=true&token=iqPqGUucIDx_hvL69dd7Ke0X)](https://deepsource.io/gh/isongjosiah/lernen-api/?ref=repository-badge)     [![DeepSource](https://deepsource.io/gh/isongjosiah/lernen-api.svg/?label=resolved+issues&show_trend=true&token=iqPqGUucIDx_hvL69dd7Ke0X)](https://deepsource.io/gh/isongjosiah/lernen-api/?ref=repository-badge)
+
+
 ## Development Set-up
 1. Have `go` installed on your machine
 2. clone the repo.
