@@ -13,12 +13,20 @@ type User struct {
 	//Enrolled  []string `gorm:"type:[]text"` TODO(josiah): sql doesn't allow a slice of strings. figure out a way around that
 }
 
+type AuthResponse struct {
+	gorm.Model
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+}
+
 type LoginDetails struct {
 	Email    string
-	Password string
+	Password string `json:"password"`
 }
 
 type UserDetails struct {
-	User  *User
-	Token string
+	UserInfo *AuthResponse `json:"user"`
+	Token    string        `json:"token"`
 }

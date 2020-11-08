@@ -2,6 +2,8 @@ package api
 
 import (
 	"errors"
+	"github.com/badoux/checkmail"
+	"github.com/jinzhu/gorm"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -46,10 +48,23 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	res := &model.AuthResponse{
+		Model: gorm.Model{
+			ID:        user.ID,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+			DeletedAt: user.DeletedAt,
+		},
+		Firstname: user.Firstname,
+		Lastname:  user.Lastname,
+		Username:  user.Username,
+		Email:     user.Email,
+	}
+
 	WriteJSONPayload(w, &ServerResponse{
 		Message:    "User successfully registered",
 		StatusCode: status,
-		Payload:    user,
+		Payload:    res,
 	})
 }
 
@@ -70,12 +85,19 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
 		return
 	}
+	// check if it is a valid email
+	err = checkmail.ValidateFormat(loginDetails.Email)
 
-	//Find user by email
-	user, findUserErr := a.Deps.DAL.UserDAL.FindUserByEmail(loginDetails.Email)
-	log.Info("Retrieving user details")
+	// If error is not equals to nil, then it must be a username
+	if err != nil {
+		user, err = a.Deps.DAL.UserDAL.FindUserByUsername(loginDetails.Email)
+	} else {
+		//Find user by email
+		user, err = a.Deps.DAL.UserDAL.FindUserByEmail(loginDetails.Email)
+		log.Info("Retrieving user details")
+	}
 
-	if findUserErr == nil {
+	if err == nil {
 		if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
 			WriteErrorResponse(w, http.StatusBadRequest, errors.New("user details do not match"))
 			return
@@ -94,8 +116,20 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		res := &model.AuthResponse{
+			Model: gorm.Model{
+				ID:        user.ID,
+				CreatedAt: user.CreatedAt,
+				UpdatedAt: user.UpdatedAt,
+				DeletedAt: user.DeletedAt,
+			},
+			Firstname: user.Firstname,
+			Lastname:  user.Lastname,
+			Username:  user.Username,
+			Email:     user.Email,
+		}
 		userDetails.Token = tokenString
-		userDetails.User = user
+		userDetails.UserInfo = res
 		WriteJSONPayload(w, &ServerResponse{
 			Message:    "Login successful",
 			StatusCode: http.StatusOK,

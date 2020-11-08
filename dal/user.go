@@ -1,6 +1,7 @@
 package dal
 
 import (
+	"fmt"
 	"github.com/badoux/checkmail"
 
 	"github.com/isongjosiah/lernen-api/dal/model"
@@ -46,7 +47,14 @@ func (u *UserDAL) Add(user *model.User) (int, error) {
 	}
 
 	// check if email already exists in database
-	account, _ := checkuser(u.Database, user.Email, user.Username)
+	account, _ := checkuser(db, "email", user.Email)
+	if account != nil {
+		err := errors.New("User is already registered, please login")
+		return http.StatusBadRequest, err
+	}
+
+	// check if username already exists in database
+	account, _ = checkuser(db, "username", user.Username)
 	if account != nil {
 		err := errors.New("User is already registered, please login")
 		return http.StatusBadRequest, err
@@ -62,9 +70,10 @@ func (u *UserDAL) Add(user *model.User) (int, error) {
 	return http.StatusOK, nil
 }
 
-func checkuser(db *gorm.DB, email string, username string) (*model.User, error) {
+func checkuser(db *gorm.DB, field string, input string, ) (*model.User, error) {
 	user := &model.User{}
-	if err := db.Debug().Table("users").Where("email = ? OR username =?", email, username).First(user).Error; err != nil {
+	query := fmt.Sprintf("%s = ?", field)
+	if err := db.Debug().Table("users").Where(query, input).First(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -77,13 +86,14 @@ func (u *UserDAL) Delete(username string) error {
 
 // FindUserByUsername returns a user based on a provided username
 func (u *UserDAL) FindUserByUsername(username string) (*model.User, error) {
-	return nil, nil
+	db := u.Database
+	return checkuser(db, "username", username)
 }
 
 // FindUserByEmail returns a user based on a provided email address
 func (u *UserDAL) FindUserByEmail(email string) (*model.User, error) {
 	db := u.Database
-	return checkuser(db, email, "")
+	return checkuser(db, "email", email)
 }
 
 // GetCourses returns a list of the title of the courses the user is enrolled in
