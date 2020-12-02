@@ -23,7 +23,7 @@ func (d *DAL) setupDALObjects(cfg *config.Config) error {
 		return err
 	}
 
-	db.Debug().AutoMigrate(&model.User{}) // database migration. No idea how this would be useful. TODO(josiah): research on gorm's database migration and it's usefulness for the project
+	db.Debug().AutoMigrate(&model.User{})
 
 	u := NewUserDAL()
 	u.SetUp(db)

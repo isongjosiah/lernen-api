@@ -22,7 +22,17 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="" />
+    <list default="true" id="0ad037d9-bc40-430f-bf31-35680629f4e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/dal/model/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/auth_handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth_handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/auth_handlers_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth_handlers_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/dal.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/dal.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dal/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/dal/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,12 +60,15 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1jVEJcbIQ2E8R0UrM8gY8VHbQAI" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -132,6 +145,7 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Initial configuration. Setup Server. Implement Handlers. Define user model" />
     <MESSAGE value="Refactor main" />
     <MESSAGE value="Setup Postgres. Refactor code." />

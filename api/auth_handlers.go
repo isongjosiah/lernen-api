@@ -14,25 +14,26 @@ import (
 
 //AuthRoutes sets up the authentication handlers
 func (a *API) AuthRoutes(router *chi.Mux) http.Handler {
-	router.Method("POST", "/login", http.HandlerFunc(a.Login))
-	router.Method("POST", "/register", http.HandlerFunc(a.Register))
+	router.Method("POST", "/login", http.HandlerFunc(a.login))
+	router.Method("POST", "/register", http.HandlerFunc(a.register))
 
 	return router
 }
 
 //Register is the handler for the path /register
-func (a *API) Register(w http.ResponseWriter, r *http.Request) {
+func (a *API) register(w http.ResponseWriter, r *http.Request) {
+	var registration model.RegistrationDetails
 	var user model.User
 	//read the information from the body. TODO(josiah): check if you need to define middlewares to set the content-type to "application/json"
-	err := decodeJSONBody(nil, r.Body, &user)
+	err := decodeJSONBody(nil, r.Body, &registration)
 	if err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	// check for empty fields
-	if user.Firstname == "" || user.Lastname == "" || user.Email == "" || user.Username == "" || user.Password == "" {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
+	if registration.Fullname == ""|| registration.Email == "" || registration.Username == "" || registration.Password == "" {
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("all fields are required. Please fill all fields"))
 		return
 	}
 
@@ -40,7 +41,11 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
-	user.Password = hashPassword(user.Password, w)
+
+	user.Fullname = registration.Fullname
+	user.Username = registration.Username
+	user.Email = registration.Email
+	user.Password = hashPassword(registration.Password, w)
 	// add the user to the database
 	status, err := a.Deps.DAL.UserDAL.Add(&user)
 	if err != nil {
@@ -55,8 +60,7 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 			UpdatedAt: user.UpdatedAt,
 			DeletedAt: user.DeletedAt,
 		},
-		Firstname: user.Firstname,
-		Lastname:  user.Lastname,
+		Fullname: user.Fullname,
 		Username:  user.Username,
 		Email:     user.Email,
 	}
@@ -69,7 +73,7 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 //Login is the handler for the path /login
-func (a *API) Login(w http.ResponseWriter, r *http.Request) {
+func (a *API) login(w http.ResponseWriter, r *http.Request) {
 	var user *model.User
 	var loginDetails model.LoginDetails
 	var userDetails model.UserDetails
@@ -123,8 +127,7 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 				UpdatedAt: user.UpdatedAt,
 				DeletedAt: user.DeletedAt,
 			},
-			Firstname: user.Firstname,
-			Lastname:  user.Lastname,
+			Fullname: user.Fullname,
 			Username:  user.Username,
 			Email:     user.Email,
 		}
