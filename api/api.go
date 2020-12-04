@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-/*	"github.com/isongjosiah/lernen-api/common"*/
 	"io"
 	"net/http"
 	"time"
@@ -15,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/chi/middleware"
 )
 
@@ -50,6 +50,15 @@ func (a *API) SetupServerHandler() http.Handler {
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
 	mux.Use(middleware.Timeout(60 * time.Second))
+	mux.Use(cors.Handler(cors.Options{
+		//AllowedOrigins
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
 
 	mux.Get("/", Home)
 	mux.Mount("/user", a.UserRoutes(mux))
