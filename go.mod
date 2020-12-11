@@ -12,6 +12,8 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/lucsky/cuid v1.0.2
+	github.com/onsi/ginkgo v1.14.2
+	github.com/onsi/gomega v1.10.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
