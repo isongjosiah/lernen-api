@@ -41,7 +41,10 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
-	
+	user.Firstname = registrationDetails.Firstname
+	user.Lastname =registrationDetails.Lastname
+	user.Username = registrationDetails.Username
+	user.Email = registrationDetails.Email
 	user.Password = hashPassword(registrationDetails.Password, w)
 	// add the user to the database
 	status, err := a.Deps.DAL.UserDAL.Add(&user)
