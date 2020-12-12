@@ -20,6 +20,13 @@ type AuthResponse struct {
 	Username  string `json:"username"`
 	Email     string `json:"email"`
 }
+type RegistrationDetail struct {
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
 
 type LoginDetails struct {
 	Email    string

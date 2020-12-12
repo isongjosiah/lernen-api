@@ -14,7 +14,7 @@ type DAL struct {
 	UserDAL IUserDAL
 }
 
-//TODO(josiah): definitely refactor this code.
+
 func (d *DAL) setupDALObjects(cfg *config.Config) error {
 	log.Info("Database : connecting to client ...")
 	db, err := gorm.Open("postgres", cfg.PostgresUrl)
@@ -23,7 +23,7 @@ func (d *DAL) setupDALObjects(cfg *config.Config) error {
 		return err
 	}
 
-	db.Debug().AutoMigrate(&model.User{}) // database migration. No idea how this would be useful. TODO(josiah): research on gorm's database migration and it's usefulness for the project
+	db.Debug().AutoMigrate(&model.User{}, &model.Course{}) // database migration. No idea how this would be useful.
 
 	u := NewUserDAL()
 	u.SetUp(db)

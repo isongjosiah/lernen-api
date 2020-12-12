@@ -38,8 +38,6 @@ func NewUserDAL() *UserDAL {
 // Add creates a new User
 func (u *UserDAL) Add(user *model.User) (int, error) {
 	db := u.Database
-	//check if user already exists in database.
-	//TODO(josiah): check out what gorm.DB.NewRecord does.
 
 	// check if the email provided is valid
 	if err := checkmail.ValidateFormat(user.Email); err != nil {
