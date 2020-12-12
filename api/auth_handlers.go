@@ -86,8 +86,13 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if loginDetails.Email == "" || loginDetails.Password == "" {
-		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
+	if loginDetails.Email == "" {
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("email field is empty"))
+		return
+	}
+
+	if loginDetails.Password == "" {
+		WriteErrorResponse(w, http.StatusBadRequest, errors.New("password field is empty"))
 		return
 	}
 	// check if it is a valid email
