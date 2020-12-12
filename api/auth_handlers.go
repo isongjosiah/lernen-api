@@ -26,7 +26,7 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 	//read the information from the body. TODO(josiah): check if you need to define middlewares to set the content-type to "application/json"
 	err := decodeJSONBody(nil, r.Body, &user)
 	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, err)
+		WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -77,7 +77,7 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 	err := decodeJSONBody(nil, r.Body, &loginDetails)
 
 	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, err)
+		WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 

@@ -6,6 +6,5 @@ type Course struct {
 	gorm.Model
 	Title    string
 	Content  string
-	Tags     []string
 	Progress int
 }
