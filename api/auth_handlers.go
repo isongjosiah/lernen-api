@@ -23,15 +23,16 @@ func (a *API) AuthRoutes(router *chi.Mux) http.Handler {
 //Register is the handler for the path /register
 func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 	var user model.User
+	var registrationDetails model.RegistrationDetail
 	//read the information from the body. TODO(josiah): check if you need to define middlewares to set the content-type to "application/json"
-	err := decodeJSONBody(nil, r.Body, &user)
+	err := decodeJSONBody(nil, r.Body, &registrationDetails)
 	if err != nil {
 		WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	// check for empty fields
-	if user.Firstname == "" || user.Lastname == "" || user.Email == "" || user.Username == "" || user.Password == "" {
+	if registrationDetails.Firstname == "" || registrationDetails.Lastname == "" || registrationDetails.Email == "" || registrationDetails.Username == "" || registrationDetails.Password == "" {
 		WriteErrorResponse(w, http.StatusBadRequest, errors.New("some required fields are empty. Please fill all fields"))
 		return
 	}
@@ -40,7 +41,8 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
-	user.Password = hashPassword(user.Password, w)
+	
+	user.Password = hashPassword(registrationDetails.Password, w)
 	// add the user to the database
 	status, err := a.Deps.DAL.UserDAL.Add(&user)
 	if err != nil {
