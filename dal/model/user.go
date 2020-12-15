@@ -29,8 +29,9 @@ type RegistrationDetail struct {
 }
 
 type LoginDetails struct {
-	Email    string
-	Password string `json:"password"`
+	Email       string
+	Password    string `json:"password"`
+	SocialLogin bool   `json: "socialLogin"`
 }
 
 type UserDetails struct {

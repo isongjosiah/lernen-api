@@ -2,9 +2,10 @@ package api
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
-	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/isongjosiah/lernen-api/dal/model"
@@ -42,7 +43,7 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user.Firstname = registrationDetails.Firstname
-	user.Lastname =registrationDetails.Lastname
+	user.Lastname = registrationDetails.Lastname
 	user.Username = registrationDetails.Username
 	user.Email = registrationDetails.Email
 	user.Password = hashPassword(registrationDetails.Password, w)
@@ -108,9 +109,11 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err == nil {
-		if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
-			WriteErrorResponse(w, http.StatusBadRequest, errors.New("user details do not match"))
-			return
+		if loginDetails.SocialLogin == false {
+			if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
+				WriteErrorResponse(w, http.StatusBadRequest, errors.New("user details do not match"))
+				return
+			}
 		}
 
 		jwtSecretKey := []byte(a.Config.TokenSecret)
