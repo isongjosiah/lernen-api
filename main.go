@@ -5,11 +5,6 @@ import (
 	"github.com/isongjosiah/lernen-api/config"
 	"github.com/isongjosiah/lernen-api/deps"
 	log "github.com/sirupsen/logrus"
-	"time"
-)
-
-const (
-	allowConnectionsAfterShutdown = 5 * time.Second
 )
 
 func main() {

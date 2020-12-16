@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"github.com/isongjosiah/lernen-api/config"
 	"github.com/pkg/errors"
 )
@@ -14,7 +13,7 @@ type AWS struct {
 func NewAWS(cfg *config.Config) (*AWS, error) {
 	s3, err := NewS3Service(cfg)
 	if err != nil {
-		return nil, errors.Wrapf(err, fmt.Sprint("failed to set up s3 service"))
+		return nil, errors.Wrapf(err, "failed to set up s3 service")
 	}
 	aws := &AWS{
 		S3: s3,
