@@ -109,7 +109,7 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err == nil {
-		if loginDetails.SocialLogin == false {
+		if !loginDetails.SocialLogin {
 			if !comparePasswords(user.Password, []byte(loginDetails.Password)) {
 				WriteErrorResponse(w, http.StatusBadRequest, errors.New("user details do not match"))
 				return
