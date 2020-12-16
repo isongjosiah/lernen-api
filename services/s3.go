@@ -2,10 +2,12 @@ package services
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/isongjosiah/lernen-api/config"
+	log "github.com/sirupsen/logrus"
 	"mime/multipart"
 )
 
@@ -17,6 +19,7 @@ const (
 type IS3Service interface {
 	Upload(filename string, body multipart.File) (*s3manager.UploadOutput, error)
 	Download(link string) error
+	Delete(key string) (*s3.DeleteObjectOutput, error)
 }
 
 type S3Service struct {
@@ -51,7 +54,9 @@ func (s *S3Service) Upload(filename string, body multipart.File) (*s3manager.Upl
 		Bucket: aws.String(S3Bucket),
 		Key:    aws.String(filename),
 		Body:   body,
+		ACL:    aws.String("public-read"),
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -60,4 +65,25 @@ func (s *S3Service) Upload(filename string, body multipart.File) (*s3manager.Upl
 
 func (s *S3Service) Download(link string) error {
 	return nil
+}
+
+func (s *S3Service) Delete(key string) (*s3.DeleteObjectOutput, error) {
+	input := &s3.DeleteObjectInput{
+		Bucket: aws.String(S3Bucket),
+		Key:    aws.String(key),
+	}
+	res, err := s.s3.DeleteObject(input)
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			default:
+				log.Error(aerr.Error())
+				return nil, aerr
+			}
+		} else {
+			log.Error(err.Error())
+			return res, err
+		}
+	}
+	return nil, nil
 }
