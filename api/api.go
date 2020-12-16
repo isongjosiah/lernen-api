@@ -14,8 +14,8 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/go-chi/chi"
-	"github.com/go-chi/cors"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 )
 
 type API struct {
@@ -37,7 +37,6 @@ func (a *API) Serve() error {
 	return a.Server.ListenAndServe()
 }
 
-
 func (a *API) Shutdown() error {
 	return a.Server.Shutdown(context.Background())
 }
@@ -52,8 +51,8 @@ func (a *API) SetupServerHandler() http.Handler {
 	mux.Use(middleware.Timeout(60 * time.Second))
 	mux.Use(cors.Handler(cors.Options{
 		//AllowedOrigins
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,

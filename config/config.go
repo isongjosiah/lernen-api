@@ -14,6 +14,7 @@ const (
 //Config contains the necessary configuration for the file
 type Config struct {
 	ServiceName string
+	AWSRegion   string `env:"AWS_REGION" required:"true"`
 	PostgresUrl string `env:"DATABASE_URL" required:"true"`
 	Development bool   `env:"DEVELOPMENT" envDefault:"true"`
 	Port        int    `env:"PORT" required:"true"`

@@ -38,10 +38,6 @@ func (a *API) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err != nil {
-		WriteErrorResponse(w, http.StatusInternalServerError, err)
-		return
-	}
 	user.Firstname = registrationDetails.Firstname
 	user.Lastname = registrationDetails.Lastname
 	user.Username = registrationDetails.Username
@@ -140,6 +136,7 @@ func (a *API) Login(w http.ResponseWriter, r *http.Request) {
 			Lastname:  user.Lastname,
 			Username:  user.Username,
 			Email:     user.Email,
+			PicSrc:    user.PicSrc,
 		}
 		userDetails.Token = tokenString
 		userDetails.UserInfo = res

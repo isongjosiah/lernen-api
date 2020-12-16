@@ -2,6 +2,7 @@ package dal
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/badoux/checkmail"
 
 	"github.com/isongjosiah/lernen-api/dal/model"
@@ -17,7 +18,7 @@ type IUserDAL interface {
 	FindUserByUsername(username string) (*model.User, error)
 	FindUserByEmail(email string) (*model.User, error)
 	GetCourses(user *model.User) (*[]string, error)
-	EditProfile(user *model.User) error
+	EditPicture(username string, data *s3manager.UploadOutput) error
 }
 
 // UserDAL ...
@@ -68,7 +69,7 @@ func (u *UserDAL) Add(user *model.User) (int, error) {
 	return http.StatusOK, nil
 }
 
-func checkUser(db *gorm.DB, field string, input string, ) (*model.User, error) {
+func checkUser(db *gorm.DB, field string, input string) (*model.User, error) {
 	user := &model.User{}
 	query := fmt.Sprintf("%s = ?", field)
 	if err := db.Debug().Table("users").Where(query, input).First(user).Error; err != nil {
@@ -101,6 +102,16 @@ func (u *UserDAL) GetCourses(user *model.User) (*[]string, error) {
 }
 
 // EditProfile edits the profile of a user
-func (u *UserDAL) EditProfile(user *model.User) error {
+func (u *UserDAL) EditPicture(username string, data *s3manager.UploadOutput) error {
+	db := u.Database
+	user, err := u.FindUserByUsername(username)
+	if err != nil {
+		return err
+	}
+	user.PicSrc = data.Location
+	user.PicUploadID = data.UploadID
+	user.PicVersionID = data.VersionID
+
+	db.Save(user)
 	return nil
 }

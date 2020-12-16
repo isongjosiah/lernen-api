@@ -5,14 +5,6 @@ import (
 	"github.com/isongjosiah/lernen-api/config"
 	"github.com/isongjosiah/lernen-api/deps"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
-)
-
-const (
-	allowConnectionsAfterShutdown = 5 * time.Second
 )
 
 func main() {
@@ -38,17 +30,4 @@ func main() {
 	}
 
 	log.Fatal(a.Serve())
-
-	// graceful shutdown
-	stopChan := make(chan os.Signal)
-	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
-	<-stopChan
-
-	log.Infof("Request to shutdown server. Doing nothing for %v", allowConnectionsAfterShutdown)
-	waitTimer := time.NewTimer(allowConnectionsAfterShutdown)
-	<-waitTimer.C
-
-	log.Infof("Shutting down server...")
-	log.Fatal(a.Shutdown())
-
 }

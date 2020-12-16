@@ -17,11 +17,11 @@ const (
 
 // ServerResponse struct ...
 type ServerResponse struct {
-	Err         string              `json:"error"`
-	Message     string             `json:"message"`
-	StatusCode  int                `json:"status_code"`
-	Context     context.Context    `json:"context"`
-	Payload     interface{}        `json:"payload"`
+	Err        string          `json:"error"`
+	Message    string          `json:"message"`
+	StatusCode int             `json:"status_code"`
+	Context    context.Context `json:"context"`
+	Payload    interface{}     `json:"payload"`
 }
 
 // ErrorResponse struct ...
@@ -36,7 +36,6 @@ type ErrorResponse struct {
 }*/
 
 func WriteErrorResponse(w http.ResponseWriter, statusCode int, err error) {
-	println(err)
 	r := respondWithError(err, statusCode, nil)
 	errorResponse, _ := json.Marshal(r)
 	WriteJSONResponse(w, r.StatusCode, errorResponse)
@@ -84,11 +83,11 @@ func respondWithError(err error, httpStatusCode int, tracingContext *tracing.Con
 		}).Error(message)
 
 	return &ServerResponse{
-		Err:         message,
-		Message:     "failed",
-		StatusCode:  httpStatusCode,
-		Context:     nil,
-		Payload:     nil,
+		Err:        message,
+		Message:    "failed",
+		StatusCode: httpStatusCode,
+		Context:    nil,
+		Payload:    nil,
 	}
 
 }
